@@ -17,12 +17,14 @@
         </div>
         @if (_monacoLoaded)
         {
-            <StandaloneCodeEditor @ref="_jsonEditor"
-                                  Id="json-editor"
-                                  ConstructionOptions="JsonEditorOptions"
-                                  CssClass="editor-monaco"
-                                  OnDidInit="OnJsonEditorInit"
-                                  OnDidChangeModelContent="OnJsonChanged" />
+            <div class="editor-container">
+                <StandaloneCodeEditor @ref="_jsonEditor"
+                                     Id="json-editor"
+                                     ConstructionOptions="JsonEditorOptions"
+                                     CssClass="editor-monaco"
+                                     OnDidInit="OnJsonEditorInit"
+                                     OnDidChangeModelContent="OnJsonChanged" />
+            </div>
         }
     </div>
 
@@ -41,12 +43,14 @@
         </div>
         @if (_monacoLoaded)
         {
-            <StandaloneCodeEditor @ref="_liquidEditor"
-                                  Id="liquid-editor"
-                                  ConstructionOptions="LiquidEditorOptions"
-                                  CssClass="editor-monaco"
-                                  OnDidInit="OnLiquidEditorInit"
-                                  OnDidChangeModelContent="OnLiquidChanged" />
+            <div class="editor-container">
+                <StandaloneCodeEditor @ref="_liquidEditor"
+                                     Id="liquid-editor"
+                                     ConstructionOptions="LiquidEditorOptions"
+                                     CssClass="editor-monaco"
+                                     OnDidInit="OnLiquidEditorInit"
+                                     OnDidChangeModelContent="OnLiquidChanged" />
+            </div>
         }
     </div>
 
@@ -98,141 +102,6 @@
 </div>
 
 <style>
-    .editor-hidden {
-      display: none;
-    }
-
-    .editor-visible {
-   flex: 1;
-     width: 100%;
-        height: 100%;
-    }
-
-    /* Dark Theme */
-    .panel-header.dark-theme {
-     background-color: #1e1e1e;
-  color: #fff;
-border-bottom: 1px solid #333;
-    }
-
-     .panel-header.dark-theme select {
-     background-color: #2d2d30;
-       color: #fff;
-        border: 1px solid #3e3e42;
-        }
-
-            .panel-header.dark-theme select:focus {
-   outline: none;
- border-color: #007acc;
-      }
-
-    .panel-header.dark-theme .copy-button {
-      background-color: #2d2d30;
-  color: #fff;
-      border: 1px solid #3e3e42;
- }
-
-    .panel-header.dark-theme .copy-button:hover:not(:disabled) {
-      background-color: #3e3e42;
-border-color: #007acc;
-        }
-
-    .loading.dark-theme, .error.dark-theme {
-   background-color: #1e1e1e;
-   color: #fff;
-    }
-
-    .error.dark-theme {
-   color: #f48771;
-    }
-
-    /* Light Theme */
-  .panel-header.light-theme {
-        background-color: #f3f3f3;
-        color: #000;
-   border-bottom: 1px solid #e0e0e0;
-    }
-
-        .panel-header.light-theme select {
-     background-color: #ffffff;
-   color: #000;
-  border: 1px solid #d0d0d0;
-        }
-
-            .panel-header.light-theme select:focus {
-       outline: none;
-    border-color: #007acc;
-   }
-
-    .panel-header.light-theme .copy-button {
-        background-color: #ffffff;
-      color: #000;
-        border: 1px solid #d0d0d0;
-    }
-
-        .panel-header.light-theme .copy-button:hover:not(:disabled) {
-       background-color: #e8e8e8;
-  border-color: #007acc;
-        }
-
-    .loading.light-theme, .error.light-theme {
-        background-color: #f3f3f3;
-      color: #000;
-    }
-
-    .error.light-theme {
-   color: #e51400;
-    }
-
-    /* Common Styles */
-    .theme-selector {
-   padding: 5px 10px;
-    border-radius: 3px;
-        font-size: 12px;
-        cursor: pointer;
-  margin-left: 10px;
-    }
-
-.copy-button {
-        display: flex;
- align-items: center;
-        gap: 5px;
-        padding: 5px 10px;
-        border-radius: 3px;
-        font-size: 12px;
-    cursor: pointer;
- transition: all 0.2s;
-    }
-
-        .copy-button:disabled {
-  opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .copy-button svg {
-  width: 14px;
- height: 14px;
-  }
-
-    .copied-text {
-      font-size: 11px;
-     margin-left: 2px;
-        color: #4ec9b0;
-    }
-
-    .loading, .error {
-     flex: 1;
-      display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        padding: 20px;
-    }
-
-    .error {
-   white-space: pre-wrap;
-   word-break: break-word;
-    }
 </style>
 
 @code {

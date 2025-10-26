@@ -1,0 +1,244 @@
+/* ===== Playground Layout ===== */
+.playground-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.editor-panel, .preview-panel {
+    display: flex;
+  flex-direction: column;
+    border-right: 1px solid #007acc;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.preview-panel {
+    border-right: none;
+}
+
+/* ===== Panel Headers ===== */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #007acc;
+    flex-shrink: 0;
+}
+
+    .panel-header h3 {
+        margin: 0;
+  font-size: 14px;
+        font-weight: 600;
+    }
+
+/* ===== Monaco Editors ===== */
+.editor-container {
+    flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Use ::deep to penetrate component boundaries */
+::deep .editor-monaco {
+flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+ min-height: 0;
+    overflow: hidden;
+    display: flex;
+flex-direction: column;
+}
+
+/* Ensure Monaco container takes full height */
+::deep .editor-monaco > div {
+    flex: 1;
+min-height: 0;
+}
+
+.editor-hidden {
+display: none !important;
+}
+
+.editor-visible {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+    ::deep .editor-visible > * {
+   flex: 1;
+        min-height: 0;
+    }
+
+/* ===== Selectors (Common Styles) ===== */
+.language-selector,
+.example-selector,
+.theme-selector {
+    padding: 5px 10px;
+    border: 1px solid #007acc;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+    .language-selector:focus,
+    .example-selector:focus,
+    .theme-selector:focus {
+        outline: none;
+        border-color: #007acc;
+    }
+
+.theme-selector {
+    margin-left: 10px;
+}
+
+.example-selector {
+    margin-left: auto;
+}
+
+/* ===== Copy Button ===== */
+.copy-button {
+    display: flex;
+    align-items: center;
+ gap: 5px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .copy-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .copy-button svg {
+     width: 14px;
+        height: 14px;
+    }
+
+.copied-text {
+    font-size: 11px;
+  margin-left: 2px;
+    color: #4ec9b0;
+}
+
+/* ===== Loading & Error States ===== */
+.loading, .error {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  font-size: 14px;
+    padding: 20px;
+}
+
+.error {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* ===== Dark Theme ===== */
+.panel-header.dark-theme {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-bottom: 1px solid #333;
+}
+
+    .panel-header.dark-theme select {
+        background-color: #2d2d30;
+        color: #fff;
+        border: 1px solid #3e3e42;
+    }
+
+     .panel-header.dark-theme select:focus {
+            outline: none;
+            border-color: #007acc;
+        }
+
+    .panel-header.dark-theme .copy-button {
+  background-color: #2d2d30;
+    color: #fff;
+        border: 1px solid #3e3e42;
+    }
+
+      .panel-header.dark-theme .copy-button:hover:not(:disabled) {
+ background-color: #3e3e42;
+     border-color: #007acc;
+        }
+
+.loading.dark-theme, .error.dark-theme {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.error.dark-theme {
+    color: #f48771;
+}
+
+/* ===== Light Theme ===== */
+.panel-header.light-theme {
+    background-color: #f3f3f3;
+    color: #000;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+    .panel-header.light-theme select {
+        background-color: #ffffff;
+     color: #000;
+    border: 1px solid #d0d0d0;
+    }
+
+        .panel-header.light-theme select:focus {
+     outline: none;
+  border-color: #007acc;
+        }
+
+    .panel-header.light-theme .copy-button {
+  background-color: #ffffff;
+        color: #000;
+        border: 1px solid #d0d0d0;
+    }
+
+ .panel-header.light-theme .copy-button:hover:not(:disabled) {
+            background-color: #e8e8e8;
+            border-color: #007acc;
+  }
+
+.loading.light-theme, .error.light-theme {
+    background-color: #f3f3f3;
+color: #000;
+}
+
+.error.light-theme {
+    color: #e51400;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .playground-container {
+   grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+
+    .editor-panel, .preview-panel {
+        border-right: none;
+        border-bottom: 1px solid #007acc;
+    }
+
+    .preview-panel {
+        border-bottom: none;
+    }
+}
