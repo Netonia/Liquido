@@ -10,15 +10,6 @@
     <div class="editor-panel">
         <div class="panel-header">
             <h3>JSON Data</h3>
-            <select @bind="SelectedExample" class="example-selector">
-                <option value="">Examples</option>
-                <option value="simple">Simple User</option>
-                <option value="array">Property List</option>
-                <option value="sql">SQL Insert</option>
-                <option value="csharp">C# Class Generator</option>
-                <option value="html">HTML Table</option>
-                <option value="xml">XML Document</option>
-            </select>
         </div>
         @if (_monacoLoaded)
         {
@@ -34,12 +25,14 @@
     <div class="editor-panel">
         <div class="panel-header">
             <h3>Liquid Template</h3>
-            <select @bind="SelectedLanguage" class="language-selector">
-                <option value="plaintext">Plain Text</option>
-                <option value="csharp">C#</option>
-                <option value="sql">SQL</option>
-                <option value="html">HTML</option>
-                <option value="xml">XML</option>
+            <select @bind="SelectedExample" class="example-selector">
+                <option value="">Examples</option>
+                <option value="simple">Simple User</option>
+                <option value="array">Property List</option>
+                <option value="sql">SQL Insert</option>
+                <option value="csharp">C# Class Generator</option>
+                <option value="html">HTML Table</option>
+                <option value="xml">XML Document</option>
             </select>
         </div>
         @if (_monacoLoaded)
@@ -56,6 +49,23 @@
     <div class="preview-panel">
         <div class="panel-header">
             <h3>Preview</h3>
+            <select @bind="SelectedLanguage" class="language-selector">
+                <option value="plaintext">Plain Text</option>
+                <option value="csharp">C#</option>
+                <option value="sql">SQL</option>
+                <option value="html">HTML</option>
+                <option value="xml">XML</option>
+            </select>
+            <button @onclick="CopyToClipboard" class="copy-button" disabled="@(!_previewEditorReady || _isRendering || !string.IsNullOrEmpty(_error))" title="Copy to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                </svg>
+                @if (_copied)
+                {
+                    <span class="copied-text">Copied!</span>
+                }
+            </button>
         </div>
         @if (!_monacoLoaded)
         {
@@ -84,6 +94,44 @@
 </div>
 
 <style>
+    .editor-hidden {
+        display: none;
+    }
+
+    .editor-visible {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+    }
+
+    .copy-button {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        /* background-color: #2d2d30;
+            color: #fff; */
+        border: 1px solid #007acc;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+        .copy-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .copy-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+    .copied-text {
+        font-size: 11px;
+        margin-left: 2px;
+    }
 </style>
 
 @code {
@@ -99,6 +147,8 @@
     private bool _liquidEditorReady = false;
     private bool _previewEditorReady = false;
     private bool _monacoLoaded = false;
+    private bool _copied = false;
+    private System.Threading.CancellationTokenSource? _copiedCts;
 
     private string SelectedLanguage
     {
@@ -317,9 +367,7 @@ VALUES ({{ row.values | join: ', ' }});
         {
             Language = "liquid",
             Theme = "vs-light",
-            Value = @"<user>
-  <name>{{ firstName }} {{ lastName }}</name>
-</user>",
+            Value = @"Hello, {{ firstName }} {{ lastName }}!",
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false },
             ScrollBeyondLastLine = false
@@ -460,8 +508,48 @@ VALUES ({{ row.values | join: ', ' }});
         }
     }
 
+    private async Task CopyToClipboard()
+    {
+        if (_previewEditor == null || !_previewEditorReady)
+            return;
+
+        try
+        {
+            var content = await _previewEditor.GetValue();
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", content);
+
+                // Show "Copied!" feedback for 2 seconds
+                _copiedCts?.Cancel();
+                _copiedCts = new System.Threading.CancellationTokenSource();
+                _copied = true;
+                StateHasChanged();
+
+                try
+                {
+                    await Task.Delay(2000, _copiedCts.Token);
+                    _copied = false;
+                    StateHasChanged();
+                }
+                catch (TaskCanceledException)
+                {
+                    // Expected when user copies again before timer completes
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error copying to clipboard: {ex.Message}");
+            // Could show an error message to the user here
+        }
+    }
+
     public async ValueTask DisposeAsync()
     {
         _debounceTimer?.Dispose();
+        _copiedCts?.Cancel();
+        _copiedCts?.Dispose();
     }
 }

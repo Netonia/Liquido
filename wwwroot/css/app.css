@@ -130,7 +130,7 @@ code {
 .editor-panel, .preview-panel {
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #333;
+    border-right: 1px solid #007acc;
     overflow: hidden;
 }
 
@@ -144,7 +144,7 @@ code {
     align-items: center;
     padding: 10px 15px;
     /*background-color: #1e1e1e;*/
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #007acc;
     /*color: #fff;*/
 }
 
@@ -158,7 +158,7 @@ code {
     padding: 5px 10px;
    /* background-color: #2d2d30;
     color: #fff;*/
-    border: 1px solid #3e3e42;
+    border: 1px solid #007acc;
     border-radius: 3px;
     font-size: 12px;
     cursor: pointer;
@@ -200,7 +200,7 @@ code {
 
     .editor-panel, .preview-panel {
         border-right: none;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #007acc;
     }
 
     .preview-panel {
@@ -222,7 +222,7 @@ code {
     padding: 5px 10px;
     /*background-color: #2d2d30;
     color: #fff;*/
-    border: 1px solid #3e3e42;
+    border: 1px solid #007acc;
     border-radius: 3px;
     font-size: 12px;
     cursor: pointer;
