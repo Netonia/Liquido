@@ -23,7 +23,7 @@ public class LiquidRenderService
         try
         {
             // Parse JSON
-            var model = JToken.Parse(jsonData);
+            var jsonToken = JToken.Parse(jsonData);
 
             // Parse Liquid template
             if (!_parser.TryParse(liquidTemplate, out var template, out var errors))
@@ -33,7 +33,29 @@ public class LiquidRenderService
             }
 
             // Create template context
-            var context = new TemplateContext(model, _options);
+            var context = new TemplateContext(_options);
+            
+            // If the JSON is an array, set it as 'model' variable
+            // If it's an object, set the object as the model and also expose properties as root variables
+            if (jsonToken is JArray jArray)
+            {
+                context.SetValue("model", jArray);
+            }
+            else if (jsonToken is JObject jObject)
+            {
+                // Set the entire object as model
+                context.SetValue("model", jObject);
+                
+                // Also expose each property as a root variable for convenience
+                foreach (var property in jObject.Properties())
+                {
+                    context.SetValue(property.Name, property.Value);
+                }
+            }
+            else
+            {
+                context.SetValue("model", jsonToken);
+            }
 
             // Render the template
             var result = await template.RenderAsync(context);
