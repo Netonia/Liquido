@@ -1,0 +1,6 @@
+@Liquido.Api_HostAddress = http://localhost:5003
+
+GET {{Liquido.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

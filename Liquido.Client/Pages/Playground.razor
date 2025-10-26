@@ -1,0 +1,236 @@
+@page "/"
+@using Liquido.Client.Models
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Liquid JSON Playground</PageTitle>
+
+<div class="playground-container">
+    <div class="editor-panel">
+        <div class="panel-header">
+            <h3>JSON Data</h3>
+        </div>
+        <StandaloneCodeEditor @ref="_jsonEditor" 
+                             Id="json-editor" 
+                             ConstructionOptions="JsonEditorOptions" 
+                             CssClass="editor-monaco" 
+                             OnDidChangeModelContent="OnJsonChanged" />
+    </div>
+
+    <div class="editor-panel">
+        <div class="panel-header">
+            <h3>Liquid Template</h3>
+        </div>
+        <StandaloneCodeEditor @ref="_liquidEditor" 
+                             Id="liquid-editor" 
+                             ConstructionOptions="LiquidEditorOptions" 
+                             CssClass="editor-monaco" 
+                             OnDidChangeModelContent="OnLiquidChanged" />
+    </div>
+
+    <div class="preview-panel">
+        <div class="panel-header">
+            <h3>Preview</h3>
+            <select @bind="SelectedLanguage" class="language-selector">
+                <option value="plaintext">Plain Text</option>
+                <option value="xml">XML</option>
+                <option value="csharp">C#</option>
+                <option value="sql">SQL</option>
+                <option value="html">HTML</option>
+            </select>
+        </div>
+        @if (_isRendering)
+        {
+            <div class="loading">Rendering...</div>
+        }
+        else if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="error">@_error</div>
+        }
+        else
+        {
+            <StandaloneCodeEditor @ref="_previewEditor" 
+                                 Id="preview-editor" 
+                                 ConstructionOptions="PreviewEditorOptions" 
+                                 CssClass="editor-monaco" />
+        }
+    </div>
+</div>
+
+@code {
+    private StandaloneCodeEditor? _jsonEditor;
+    private StandaloneCodeEditor? _liquidEditor;
+    private StandaloneCodeEditor? _previewEditor;
+    private string _selectedLanguage = "plaintext";
+    private bool _isRendering = false;
+    private string? _error;
+    private System.Timers.Timer? _debounceTimer;
+
+    private string SelectedLanguage
+    {
+        get => _selectedLanguage;
+        set
+        {
+            _selectedLanguage = value;
+            _ = UpdatePreviewLanguageAsync();
+        }
+    }
+
+    private StandaloneEditorConstructionOptions JsonEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            Language = "json",
+            Theme = "vs-dark",
+            Value = @"{
+  ""firstName"": ""John"",
+  ""lastName"": ""Doe""
+}",
+            AutomaticLayout = true,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false
+        };
+    }
+
+    private StandaloneEditorConstructionOptions LiquidEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            Language = "liquid",
+            Theme = "vs-dark",
+            Value = @"<user>
+  <name>{{ firstName }} {{ lastName }}</name>
+</user>",
+            AutomaticLayout = true,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false
+        };
+    }
+
+    private StandaloneEditorConstructionOptions PreviewEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            Language = _selectedLanguage,
+            Theme = "vs-dark",
+            Value = "",
+            ReadOnly = true,
+            AutomaticLayout = true,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Initial render
+            await RenderTemplateAsync();
+        }
+    }
+
+    private void OnJsonChanged(ModelContentChangedEvent e)
+    {
+        OnEditorContentChanged();
+    }
+
+    private void OnLiquidChanged(ModelContentChangedEvent e)
+    {
+        OnEditorContentChanged();
+    }
+
+    private void OnEditorContentChanged()
+    {
+        _debounceTimer?.Stop();
+        _debounceTimer?.Dispose();
+        _debounceTimer = new System.Timers.Timer(500); // 500ms debounce
+        _debounceTimer.Elapsed += async (sender, e) =>
+        {
+            _debounceTimer?.Stop();
+            await InvokeAsync(async () =>
+            {
+                await RenderTemplateAsync();
+                StateHasChanged();
+            });
+        };
+        _debounceTimer.AutoReset = false;
+        _debounceTimer.Start();
+    }
+
+    private async Task RenderTemplateAsync()
+    {
+        if (_jsonEditor == null || _liquidEditor == null || _previewEditor == null)
+            return;
+
+        try
+        {
+            _isRendering = true;
+            _error = null;
+            StateHasChanged();
+
+            var jsonData = await _jsonEditor.GetValue();
+            var liquidTemplate = await _liquidEditor.GetValue();
+
+            // Call API to render
+            var response = await Http.PostAsJsonAsync("/api/render", new RenderRequest
+            {
+                JsonData = jsonData,
+                LiquidTemplate = liquidTemplate
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<RenderResponse>();
+                if (result != null)
+                {
+                    if (result.Success && result.Result != null)
+                    {
+                        await _previewEditor.SetValue(result.Result);
+                    }
+                    else
+                    {
+                        _error = result.Error ?? "Unknown error";
+                    }
+                }
+            }
+            else
+            {
+                _error = $"API Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            _error = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            _isRendering = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task UpdatePreviewLanguageAsync()
+    {
+        if (_previewEditor != null)
+        {
+            var currentValue = await _previewEditor.GetValue();
+            await _previewEditor.UpdateOptions(new EditorUpdateOptions
+            {
+                Theme = "vs-dark"
+            });
+            
+            // Update the model language
+            var model = await _previewEditor.GetModel();
+            if (model != null)
+            {
+                await Global.SetModelLanguage(JSRuntime, model, _selectedLanguage);
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        _debounceTimer?.Dispose();
+    }
+}
