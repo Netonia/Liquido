@@ -107,7 +107,7 @@ public partial class Playground
     ""columns"": [
       { ""name"": ""Id"", ""type"": ""int"" },
       { ""name"": ""Name"", ""type"": ""string"" },
-    { ""name"": ""Email"", ""type"": ""string"" }
+      { ""name"": ""Email"", ""type"": ""string"" }
     ],
     ""values"": [1, ""John Doe"", ""john@example.com""]
   },
@@ -115,7 +115,7 @@ public partial class Playground
     ""table"": ""Users"",
     ""columns"": [
       { ""name"": ""Id"", ""type"": ""int"" },
-    { ""name"": ""Name"", ""type"": ""string"" },
+      { ""name"": ""Name"", ""type"": ""string"" },
       { ""name"": ""Email"", ""type"": ""string"" }
     ],
     ""values"": [2, ""Jane Smith"", ""jane@example.com""]
