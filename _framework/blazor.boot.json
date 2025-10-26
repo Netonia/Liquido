@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Liquido",
   "resources": {
-    "hash": "sha256-lCtIaQvw/ONPtH89bGQh+7Oy9AwYNKStyV3TQTwF/e8=",
+    "hash": "sha256-lOeZBuEZ8cmf+OYg4e7acQCBv66tSFpp03Z0duE8XIw=",
     "fingerprinting": {
       "BlazorMonaco.98tzo6dc2v.wasm": "BlazorMonaco.wasm",
       "Fluid.1eepegtfhp.wasm": "Fluid.wasm",
@@ -69,7 +69,7 @@
       "System.Xml.XDocument.ocxzop4g63.wasm": "System.Xml.XDocument.wasm",
       "System.8rv0tdtrxz.wasm": "System.wasm",
       "System.Private.CoreLib.obur8ztdo4.wasm": "System.Private.CoreLib.wasm",
-      "Liquido.j6znib1bv3.wasm": "Liquido.wasm",
+      "Liquido.a0zytmizqo.wasm": "Liquido.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l4ptthxatg.js": "dotnet.native.js",
       "dotnet.native.d2w7colv7e.wasm": "dotnet.native.wasm",
@@ -161,7 +161,7 @@
       "System.Xml.ReaderWriter.1otkvd7d8u.wasm": "sha256-z6lJ2dLqjFO8i9yDuWV50JqG5CuDqO1ssAfKN80tAic=",
       "System.Xml.XDocument.ocxzop4g63.wasm": "sha256-mO8Myb/YHsEXA9rrh5dZinveqXGkEbaG2JNi9ZpvjnY=",
       "System.8rv0tdtrxz.wasm": "sha256-xMF0eauQ5DkSzUozHLFFMQnL6DSJO09nJLtgag+Dzbw=",
-      "Liquido.j6znib1bv3.wasm": "sha256-JcDVsGO8Lp37hP5/oKuUB7o2NfL6zI/nhgAp81/nG98="
+      "Liquido.a0zytmizqo.wasm": "sha256-uhr23eHHAitNjyE0+gtVPQaQpyYeJLTRdTj8KLifLA0="
     }
   },
   "cacheBootResources": true,
