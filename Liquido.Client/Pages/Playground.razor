@@ -7,126 +7,161 @@
 
 <div class="playground-container">
     <div class="editor-panel">
-        <div class="panel-header">
-            <h3>JSON Data</h3>
+  <div class="panel-header">
+    <h3>JSON Data</h3>
         </div>
         <StandaloneCodeEditor @ref="_jsonEditor" 
-                             Id="json-editor" 
-                             ConstructionOptions="JsonEditorOptions" 
-                             CssClass="editor-monaco" 
-                             OnDidChangeModelContent="OnJsonChanged" />
+    Id="json-editor" 
+      ConstructionOptions="JsonEditorOptions" 
+             CssClass="editor-monaco" 
+   OnDidInit="OnJsonEditorInit"
+       OnDidChangeModelContent="OnJsonChanged" />
     </div>
 
     <div class="editor-panel">
-        <div class="panel-header">
+      <div class="panel-header">
             <h3>Liquid Template</h3>
         </div>
-        <StandaloneCodeEditor @ref="_liquidEditor" 
-                             Id="liquid-editor" 
-                             ConstructionOptions="LiquidEditorOptions" 
-                             CssClass="editor-monaco" 
-                             OnDidChangeModelContent="OnLiquidChanged" />
+    <StandaloneCodeEditor @ref="_liquidEditor" 
+       Id="liquid-editor" 
+     ConstructionOptions="LiquidEditorOptions" 
+                   CssClass="editor-monaco" 
+             OnDidInit="OnLiquidEditorInit"
+       OnDidChangeModelContent="OnLiquidChanged" />
     </div>
 
     <div class="preview-panel">
         <div class="panel-header">
             <h3>Preview</h3>
-            <select @bind="SelectedLanguage" class="language-selector">
-                <option value="plaintext">Plain Text</option>
-                <option value="xml">XML</option>
-                <option value="csharp">C#</option>
-                <option value="sql">SQL</option>
-                <option value="html">HTML</option>
+      <select @bind="SelectedLanguage" class="language-selector">
+       <option value="plaintext">Plain Text</option>
+     <option value="xml">XML</option>
+   <option value="csharp">C#</option>
+     <option value="sql">SQL</option>
+        <option value="html">HTML</option>
             </select>
-        </div>
+      </div>
         @if (_isRendering)
         {
-            <div class="loading">Rendering...</div>
+        <div class="loading">Rendering...</div>
         }
-        else if (!string.IsNullOrEmpty(_error))
+  @if (!string.IsNullOrEmpty(_error))
         {
-            <div class="error">@_error</div>
+     <div class="error">@_error</div>
         }
-        else
-        {
-            <StandaloneCodeEditor @ref="_previewEditor" 
-                                 Id="preview-editor" 
-                                 ConstructionOptions="PreviewEditorOptions" 
-                                 CssClass="editor-monaco" />
-        }
+ <div class="@(_isRendering || !string.IsNullOrEmpty(_error) ? "editor-hidden" : "editor-visible")">
+       <StandaloneCodeEditor @ref="_previewEditor" 
+                  Id="preview-editor" 
+              ConstructionOptions="PreviewEditorOptions" 
+    CssClass="editor-monaco"
+           OnDidInit="OnPreviewEditorInit" />
+        </div>
     </div>
 </div>
+
+<style>
+    .editor-hidden {
+        display: none;
+  }
+
+    .editor-visible {
+    flex: 1;
+        width: 100%;
+     height: 100%;
+    }
+</style>
 
 @code {
     private StandaloneCodeEditor? _jsonEditor;
     private StandaloneCodeEditor? _liquidEditor;
-    private StandaloneCodeEditor? _previewEditor;
+private StandaloneCodeEditor? _previewEditor;
     private string _selectedLanguage = "plaintext";
     private bool _isRendering = false;
     private string? _error;
     private System.Timers.Timer? _debounceTimer;
+    private bool _jsonEditorReady = false;
+    private bool _liquidEditorReady = false;
+    private bool _previewEditorReady = false;
 
     private string SelectedLanguage
     {
         get => _selectedLanguage;
-        set
-        {
-            _selectedLanguage = value;
-            _ = UpdatePreviewLanguageAsync();
+      set
+ {
+        _selectedLanguage = value;
+         _ = UpdatePreviewLanguageAsync();
         }
     }
 
-    private StandaloneEditorConstructionOptions JsonEditorOptions(StandaloneCodeEditor editor)
+ private StandaloneEditorConstructionOptions JsonEditorOptions(StandaloneCodeEditor editor)
     {
         return new StandaloneEditorConstructionOptions
         {
             Language = "json",
-            Theme = "vs-dark",
-            Value = @"{
+    Theme = "vs-dark",
+ Value = @"{
   ""firstName"": ""John"",
   ""lastName"": ""Doe""
 }",
-            AutomaticLayout = true,
-            Minimap = new EditorMinimapOptions { Enabled = false },
+AutomaticLayout = true,
+   Minimap = new EditorMinimapOptions { Enabled = false },
             ScrollBeyondLastLine = false
         };
     }
 
     private StandaloneEditorConstructionOptions LiquidEditorOptions(StandaloneCodeEditor editor)
     {
-        return new StandaloneEditorConstructionOptions
+     return new StandaloneEditorConstructionOptions
         {
             Language = "liquid",
-            Theme = "vs-dark",
-            Value = @"<user>
+     Theme = "vs-dark",
+     Value = @"<user>
   <name>{{ firstName }} {{ lastName }}</name>
 </user>",
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false },
-            ScrollBeyondLastLine = false
+      ScrollBeyondLastLine = false
         };
     }
 
     private StandaloneEditorConstructionOptions PreviewEditorOptions(StandaloneCodeEditor editor)
-    {
+  {
         return new StandaloneEditorConstructionOptions
-        {
-            Language = _selectedLanguage,
+      {
+   Language = _selectedLanguage,
             Theme = "vs-dark",
             Value = "",
-            ReadOnly = true,
-            AutomaticLayout = true,
+          ReadOnly = true,
+      AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false },
-            ScrollBeyondLastLine = false
+ ScrollBeyondLastLine = false
         };
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task OnJsonEditorInit()
     {
-        if (firstRender)
+     _jsonEditorReady = true;
+        await TryInitialRender();
+    }
+
+    private async Task OnLiquidEditorInit()
+    {
+        _liquidEditorReady = true;
+        await TryInitialRender();
+    }
+
+    private async Task OnPreviewEditorInit()
+    {
+    _previewEditorReady = true;
+        await TryInitialRender();
+    }
+
+    private async Task TryInitialRender()
+    {
+        // Only render once all editors are ready
+ if (_jsonEditorReady && _liquidEditorReady && _previewEditorReady)
         {
-            // Initial render
-            await RenderTemplateAsync();
+     await RenderTemplateAsync();
         }
     }
 
@@ -136,7 +171,7 @@
     }
 
     private void OnLiquidChanged(ModelContentChangedEvent e)
-    {
+  {
         OnEditorContentChanged();
     }
 
@@ -145,72 +180,81 @@
         _debounceTimer?.Stop();
         _debounceTimer?.Dispose();
         _debounceTimer = new System.Timers.Timer(500); // 500ms debounce
-        _debounceTimer.Elapsed += async (sender, e) =>
-        {
+    _debounceTimer.Elapsed += async (sender, e) =>
+   {
             _debounceTimer?.Stop();
-            await InvokeAsync(async () =>
-            {
-                await RenderTemplateAsync();
-                StateHasChanged();
+ await InvokeAsync(async () =>
+       {
+  await RenderTemplateAsync();
+      StateHasChanged();
             });
         };
-        _debounceTimer.AutoReset = false;
+      _debounceTimer.AutoReset = false;
         _debounceTimer.Start();
     }
 
     private async Task RenderTemplateAsync()
     {
         if (_jsonEditor == null || _liquidEditor == null || _previewEditor == null)
-            return;
+return;
 
         try
-        {
+   {
             _isRendering = true;
             _error = null;
-            StateHasChanged();
+   StateHasChanged();
 
-            var jsonData = await _jsonEditor.GetValue();
+     var jsonData = await _jsonEditor.GetValue();
             var liquidTemplate = await _liquidEditor.GetValue();
 
-            // Call client-side rendering service
-            var (success, result, error) = await RenderService.RenderAsync(jsonData, liquidTemplate);
+         // Call client-side rendering service
+       var (success, result, error) = await RenderService.RenderAsync(jsonData, liquidTemplate);
 
-            if (success && result != null)
+ if (success && result != null)
             {
-                await _previewEditor.SetValue(result);
-            }
-            else
-            {
+  await _previewEditor.SetValue(result);
+           _error = null;
+       }
+ else
+      {
                 _error = error ?? "Unknown error";
-            }
+       }
         }
         catch (Exception ex)
         {
             _error = $"Error: {ex.Message}";
         }
         finally
-        {
-            _isRendering = false;
+{
+        _isRendering = false;
             StateHasChanged();
-        }
+    }
     }
 
     private async Task UpdatePreviewLanguageAsync()
     {
-        if (_previewEditor != null)
+        if (_previewEditor != null && _previewEditorReady)
+{
+     try
         {
-            var currentValue = await _previewEditor.GetValue();
-            await _previewEditor.UpdateOptions(new EditorUpdateOptions
-            {
-                Theme = "vs-dark"
-            });
-            
-            // Update the model language
-            var model = await _previewEditor.GetModel();
-            if (model != null)
-            {
-                await Global.SetModelLanguage(JSRuntime, model, _selectedLanguage);
-            }
+ var currentValue = await _previewEditor.GetValue();
+        await _previewEditor.UpdateOptions(new EditorUpdateOptions
+                {
+     Theme = "vs-dark"
+             });
+                
+       // Update the model language
+    var model = await _previewEditor.GetModel();
+                if (model != null)
+   {
+         await Global.SetModelLanguage(JSRuntime, model, _selectedLanguage);
+           }
+   }
+            catch (Exception ex)
+  {
+              // Ignore errors during language update
+       Console.WriteLine($"Error updating preview language: {ex.Message}");
+       }
         }
     }
 
