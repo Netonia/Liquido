@@ -100,37 +100,39 @@ public partial class Playground
     {
         return exampleId switch
         {
-            "array" => (
-              @"[
-  { ""type"": ""string"", ""name"": ""FirstName"" },
-  { ""type"": ""string"", ""name"": ""LastName"" },
-  { ""type"": ""int"", ""name"": ""Age"" },
-  { ""type"": ""bool"", ""name"": ""IsActive"" }
-]",
-             @"public class Person
-{
-{%- for prop in model %}
-    public {{ prop.type }} {{ prop.name }} { get; set; }
-{% endfor %}
-}",
-                 "csharp"
-                    ),
-
             "sql" => (
  @"[
   {
     ""table"": ""Users"",
-    ""columns"": [""Id"", ""Name"", ""Email""],
+    ""columns"": [
+      { ""name"": ""Id"", ""type"": ""int"" },
+      { ""name"": ""Name"", ""type"": ""string"" },
+    { ""name"": ""Email"", ""type"": ""string"" }
+    ],
     ""values"": [1, ""John Doe"", ""john@example.com""]
   },
   {
     ""table"": ""Users"",
-    ""columns"": [""Id"", ""Name"", ""Email""],
+    ""columns"": [
+      { ""name"": ""Id"", ""type"": ""int"" },
+    { ""name"": ""Name"", ""type"": ""string"" },
+      { ""name"": ""Email"", ""type"": ""string"" }
+    ],
     ""values"": [2, ""Jane Smith"", ""jane@example.com""]
+},
+  {
+    ""table"": ""Products"",
+    ""columns"": [
+      { ""name"": ""Id"", ""type"": ""int"" },
+      { ""name"": ""Name"", ""type"": ""string"" },
+      { ""name"": ""Price"", ""type"": ""decimal"" },
+      { ""name"": ""Description"", ""type"": ""string"" }
+    ],
+    ""values"": [1, ""Widget's Special"", 29.99, ""A premium widget with quotes inside""]
   }
 ]",
-    @"{% for row in model %}INSERT INTO {{ row.table }} ({{ row.columns | join: ', ' }})
-VALUES ({{ row.values | join: ', ' }});
+    @"{% for row in model %}INSERT INTO {{ row.table }} ({% for col in row.columns %}{{ col.name }}{% unless forloop.last %}, {% endunless %}{% endfor %})
+VALUES ({% for col in row.columns %}{% if col.type == 'string' %}'{{ row.values[forloop.index0] | replace: ""'"", ""''"" }}'{% else %}{{ row.values[forloop.index0] }}{% endif %}{% unless forloop.last %}, {% endunless %}{% endfor %});
 {% endfor %}",
     "sql"
             ),

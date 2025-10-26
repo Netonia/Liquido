@@ -33,7 +33,6 @@
                 <option value="">Examples</option>
                 <option value="csharp">C# Class Generator</option>
                 <option value="html">HTML Table</option>
-                <option value="array">Property List</option>
                 <option value="sql">SQL Insert</option>
             </select>
         </div>
@@ -55,8 +54,8 @@
             <select @bind="SelectedLanguage" class="language-selector">
                 <option value="plaintext">Plain Text</option>
                 <option value="csharp">C#</option>
-                <option value="sql">SQL</option>
                 <option value="html">HTML</option>
+                <option value="sql">SQL</option>
             </select>
             <button @onclick="CopyToClipboard" class="copy-button" disabled="@(!_previewEditorReady || _isRendering || !string.IsNullOrEmpty(_error))" title="Copy to clipboard">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
