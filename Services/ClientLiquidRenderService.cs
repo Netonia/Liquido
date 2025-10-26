@@ -1,15 +1,14 @@
 using Fluid;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Liquido.Api.Services;
+namespace Liquido.Services;
 
-public class LiquidRenderService
+public class ClientLiquidRenderService
 {
     private readonly FluidParser _parser;
     private readonly TemplateOptions _options;
 
-    public LiquidRenderService()
+    public ClientLiquidRenderService()
     {
         _parser = new FluidParser();
         _options = new TemplateOptions();
@@ -23,7 +22,15 @@ public class LiquidRenderService
         try
         {
             // Parse JSON
-            var jsonToken = JToken.Parse(jsonData);
+            JToken jsonToken;
+            try
+            {
+                jsonToken = JToken.Parse(jsonData);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, $"Invalid JSON: {ex.Message}");
+            }
 
             // Parse Liquid template
             if (!_parser.TryParse(liquidTemplate, out var template, out var errors))
