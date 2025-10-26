@@ -8,6 +8,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Register the client-side Liquid rendering service
-builder.Services.AddSingleton<ClientLiquidRenderService>();
+builder.Services.AddSingleton<LiquidRenderService>();
 
 await builder.Build().RunAsync();

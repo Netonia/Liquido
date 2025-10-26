@@ -3,12 +3,12 @@ using Newtonsoft.Json.Linq;
 
 namespace Liquido.Services;
 
-public class ClientLiquidRenderService
+public class LiquidRenderService
 {
     private readonly FluidParser _parser;
     private readonly TemplateOptions _options;
 
-    public ClientLiquidRenderService()
+    public LiquidRenderService()
     {
         _parser = new FluidParser();
         _options = new TemplateOptions();
