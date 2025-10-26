@@ -1,6 +1,6 @@
 @page "/"
-@using Liquido.Client.Models
-@inject HttpClient Http
+@using Liquido.Client.Services
+@inject ClientLiquidRenderService RenderService
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Liquid JSON Playground</PageTitle>
@@ -172,31 +172,16 @@
             var jsonData = await _jsonEditor.GetValue();
             var liquidTemplate = await _liquidEditor.GetValue();
 
-            // Call API to render
-            var response = await Http.PostAsJsonAsync("/api/render", new RenderRequest
-            {
-                JsonData = jsonData,
-                LiquidTemplate = liquidTemplate
-            });
+            // Call client-side rendering service
+            var (success, result, error) = await RenderService.RenderAsync(jsonData, liquidTemplate);
 
-            if (response.IsSuccessStatusCode)
+            if (success && result != null)
             {
-                var result = await response.Content.ReadFromJsonAsync<RenderResponse>();
-                if (result != null)
-                {
-                    if (result.Success && result.Result != null)
-                    {
-                        await _previewEditor.SetValue(result.Result);
-                    }
-                    else
-                    {
-                        _error = result.Error ?? "Unknown error";
-                    }
-                }
+                await _previewEditor.SetValue(result);
             }
             else
             {
-                _error = $"API Error: {response.StatusCode}";
+                _error = error ?? "Unknown error";
             }
         }
         catch (Exception ex)
