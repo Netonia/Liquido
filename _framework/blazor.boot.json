@@ -1,11 +1,11 @@
 {
   "mainAssemblyName": "Liquido",
   "resources": {
-    "hash": "sha256-SrXDmj67P+9ZJtUT2BsiZv1iJF3Aq7Y1/bw+jB3Gpao=",
+    "hash": "sha256-ppkgqCWRngaY/ZFcJpnb26vEm66ZtmEY7dqgkSgfHZU=",
     "fingerprinting": {
       "BlazorMonaco.98tzo6dc2v.wasm": "BlazorMonaco.wasm",
       "Fluid.1eepegtfhp.wasm": "Fluid.wasm",
-      "Microsoft.AspNetCore.Components.ux50r0yqjc.wasm": "Microsoft.AspNetCore.Components.wasm",
+      "Microsoft.AspNetCore.Components.lauhuln1et.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.sxfdi1rlxf.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
       "Microsoft.AspNetCore.Components.WebAssembly.a35oxv904j.wasm": "Microsoft.AspNetCore.Components.WebAssembly.wasm",
       "Microsoft.Extensions.Configuration.wzhhqnelnl.wasm": "Microsoft.Extensions.Configuration.wasm",
@@ -57,7 +57,7 @@
       "System.Runtime.Numerics.27r0osoeod.wasm": "System.Runtime.Numerics.wasm",
       "System.Runtime.Serialization.Formatters.drjzdg67ki.wasm": "System.Runtime.Serialization.Formatters.wasm",
       "System.Runtime.Serialization.Primitives.nh506uwomz.wasm": "System.Runtime.Serialization.Primitives.wasm",
-      "System.Runtime.1951f1k96e.wasm": "System.Runtime.wasm",
+      "System.Runtime.munlcaqvvl.wasm": "System.Runtime.wasm",
       "System.Security.Cryptography.pnem93h1q7.wasm": "System.Security.Cryptography.wasm",
       "System.Text.Encoding.Extensions.75uivmr71p.wasm": "System.Text.Encoding.Extensions.wasm",
       "System.Text.Encodings.Web.1jb665zgmj.wasm": "System.Text.Encodings.Web.wasm",
@@ -69,7 +69,7 @@
       "System.Xml.XDocument.ocxzop4g63.wasm": "System.Xml.XDocument.wasm",
       "System.8rv0tdtrxz.wasm": "System.wasm",
       "System.Private.CoreLib.obur8ztdo4.wasm": "System.Private.CoreLib.wasm",
-      "Liquido.r1nzr2fw7j.wasm": "Liquido.wasm",
+      "Liquido.9suppzmp5l.wasm": "Liquido.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l4ptthxatg.js": "dotnet.native.js",
       "dotnet.native.d2w7colv7e.wasm": "dotnet.native.wasm",
@@ -99,7 +99,7 @@
     "assembly": {
       "BlazorMonaco.98tzo6dc2v.wasm": "sha256-R8FyBgovIXHO+Iv0CZyrVhS+T30U6xRRX4tNBwjDfI8=",
       "Fluid.1eepegtfhp.wasm": "sha256-GbMS4Wb899p5jZJh+42jQN6zlTRkQbqrdp3feTM8s54=",
-      "Microsoft.AspNetCore.Components.ux50r0yqjc.wasm": "sha256-ErkJcYobZEY2o8G/vVKsHFkZvpAK2PsqTv6A8pCqg0o=",
+      "Microsoft.AspNetCore.Components.lauhuln1et.wasm": "sha256-Y0q4fQtcbO2Uh+pmc0U8TQWTKiRyx+mH86XS1gYyNQg=",
       "Microsoft.AspNetCore.Components.Web.sxfdi1rlxf.wasm": "sha256-EIjfQfBAQi/x9N8Y+wjx466uklRnisF8m+sCprgDOaQ=",
       "Microsoft.AspNetCore.Components.WebAssembly.a35oxv904j.wasm": "sha256-OqMfVlo2ZTmD/Nx7DMMgb7Zg8e16TSM5S5DO07N76HE=",
       "Microsoft.Extensions.Configuration.wzhhqnelnl.wasm": "sha256-XKu0mIlTddgbDgKXxAt72KH1jesOUPab12Fdli15Hmw=",
@@ -150,7 +150,7 @@
       "System.Runtime.Numerics.27r0osoeod.wasm": "sha256-rpFuNSjjLwdUgRpjAYvQvvDp7/5xe0gQJTmmJ6SHcp4=",
       "System.Runtime.Serialization.Formatters.drjzdg67ki.wasm": "sha256-ydtKpAyL+cVC09VOfQOMSM3pfI3PJ27L8a367xhG144=",
       "System.Runtime.Serialization.Primitives.nh506uwomz.wasm": "sha256-yxmDLIilFRFGGh38YZy6oGeigTM2POb9etjyENeOCg0=",
-      "System.Runtime.1951f1k96e.wasm": "sha256-K5zoSyh6kzXjGFSMk+AtjtLX5aaFBduCe8H8JQj6ZLI=",
+      "System.Runtime.munlcaqvvl.wasm": "sha256-/r+R0RAViYl2nEvlXEf+OkGkeJ3T948E3lJtXcweN2c=",
       "System.Security.Cryptography.pnem93h1q7.wasm": "sha256-SyfFYDwz4L6CeL4RvVUDUB2V3UybLeg0A14vHTioTSQ=",
       "System.Text.Encoding.Extensions.75uivmr71p.wasm": "sha256-5Y++7IQlv3nU8g6TlXnuAT7bUkdKlpQajNYc5312Yk8=",
       "System.Text.Encodings.Web.1jb665zgmj.wasm": "sha256-3anIZ/05UwtTHcjEwW+sGwko3P5lOMH9s1unDouwTBE=",
@@ -161,7 +161,7 @@
       "System.Xml.ReaderWriter.1otkvd7d8u.wasm": "sha256-z6lJ2dLqjFO8i9yDuWV50JqG5CuDqO1ssAfKN80tAic=",
       "System.Xml.XDocument.ocxzop4g63.wasm": "sha256-mO8Myb/YHsEXA9rrh5dZinveqXGkEbaG2JNi9ZpvjnY=",
       "System.8rv0tdtrxz.wasm": "sha256-xMF0eauQ5DkSzUozHLFFMQnL6DSJO09nJLtgag+Dzbw=",
-      "Liquido.r1nzr2fw7j.wasm": "sha256-kW2wJ/if5cHpc62HPPXVEZ1YKzD4noV8MXrrVWJAJrE="
+      "Liquido.9suppzmp5l.wasm": "sha256-59Ifg7mEnsfs2DF292pS5ttI3ePHLnVlV2EHAiCSyzg="
     }
   },
   "cacheBootResources": true,
